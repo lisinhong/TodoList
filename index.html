@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Todo List</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://fonts.googleapis.com/css?family=Timmana" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+<body>
+	<div id="app">
+		<div class="container new_todo">
+			<div class="row">
+				<div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2" style="padding: 0">
+					<h1 class="text-center" style="font-weight: 500; color: #26407C; font-family: 'Timmana'">Create Your Todo List</h1>
+					</br>
+					<form @submit.prevent="newTodo">
+						<div class="col-xs-12">
+							<input class="form-control" type="text" v-model="title" placeholder="Type your todo title.">
+						</div>
+						<div class="col-xs-12 text-center" style="margin-top: 30px">
+							<button type="submit" class="btn btn_new_todo">New Todo</button>
+							<button class="btn btn_clear_done" @click.prevent="clearDone">Clear Done</button>
+							<hr>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		
+		<div class="container tabs" v-if="todoList.length">
+			<div class="row">
+				<div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2" style="padding: 0">
+					<div class="col-xs-12 text-center">
+						<div class="tab show_all active" @click="showAll">All</div>
+						<div class="tab show_done" @click="showDone">Done</div>
+						<div class="tab show_undone" @click="showUndone">Undone</div>
+					</div>
+				</div>
+				<div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2" style="padding-left: 30px;">
+					<div class="row">
+						<div class="col-xs-4 col-sm-2 header_title">Title</div>
+						<div class="col-xs-8 col-sm-4 header_content">Content</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="output">
+			<div class="container all">
+				<todo-list v-for="(todo, index) in todoList" :todo="todo" :index="index"></todo-list>
+			</div>
+			<div class="container done">
+				<todo-list v-for="(todo, index) in todoList" :todo="todo" :index="index" v-if="todo.status"></todo-list>
+			</div>
+			<div class="container undone">
+				<todo-list v-for="(todo, index) in todoList" :todo="todo" :index="index" v-if="!todo.status"></todo-list>
+			</div>
+		</div>
+	</div>
+
+	<template id="todo-list">
+		<div class="row">
+			<div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2" style="padding-left: 30px; margin-top: 2px; margin-bottom: 2px;">	
+				<div class="row show_todo" v-bind:id="index">
+					<div class="col-xs-4 col-sm-2 title">{{todo.title}}</div>
+					<div class="col-xs-8 col-sm-4 content">{{todo.content}}</div>
+					<div class="col-xs-12 col-sm-6 text-right">
+						<button class="btn btn-info" v-if="todo.status" @click="isDone(todo)">Done</button>
+						<button class="btn btn-info status_btn" v-else @click="isDone(todo)">Undone</button>
+						<button class="btn btn-info edit_btn" @click="editTodo(index)">Edit</button>
+						<!-- <i class="fa fa-times" @click="deleteTodo(index)></i> -->
+						<button class="btn btn-info delete_btn" @click="deleteTodo(index)">Delete</button>
+					</div>
+				</div>
+				<div class="row edit_todo" v-bind:id="index">
+					<form @submit.prevent="finishEdit(index)">
+						<div class="col-xs-4 col-sm-2">
+							<input class="form-control" type="text" v-model="todo.title">
+						</div>
+						<div class="col-xs-8 col-sm-4">
+							<input class="form-control" type="text" v-model="todo.content">
+						</div>
+						<div class="col-xs-12 col-sm-6 text-right" style="margin-top: 2px;">
+							<button type="button" class="btn btn-info" v-if="todo.status" @click="isDone(todo)">Done</button>
+							<button type="button" class="btn btn-info status_btn" v-else @click="isDone(todo)">Undone</button>
+							<button type="submit" class="btn btn-info finish_btn">Finish</button>
+							<button type="button" class="btn btn-info delete_btn" @click="deleteTodo(index)">Delete</button>
+						</div>
+					</form>
+					
+				</div>
+			</div>
+		</div>
+	</template>
+
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
+	<script src="main.js"></script>
+</body>
+</html>
